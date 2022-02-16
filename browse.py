@@ -1,7 +1,6 @@
 import json
 import traceback
 import os
-import filetype
 from pathlib import Path
 from datetime import datetime
 from hurry.filesize import size
@@ -18,11 +17,35 @@ def build_path(parts):
     parts = [part for part in parts if part]
     return str(Path("/".join(parts)))
 
+def get_file_image(file):
+    file_image_dict = {
+        "pdf":"pdf_icon.png", 
+        "py":"python_icon.png", 
+        "zip":"zip_icon.png", 
+        "rar":"rar_icon.png", 
+        "pyt":"nn_model.png", 
+        "net":"nn_model.png", 
+        "xml":"xml_icon.jpg",
+        "csv":"csv_icon.png",
+        "xls":"excel_icon.jpg",
+        "xlsx":"excel_icon.jpg",
+        "doc":"word_icon.png",
+        "docx":"word_icon.png",
+        "json":"json_icon.png"
+    }
+    mime_type = Path(file).suffix.lower().replace(".","")
+    image = 'default_file.png'
+    if mime_type in file_image_dict:
+        image = file_image_dict[mime_type]
+    return image
+
 class FileBrowser:
     def __init__(self):
         # Config Data
         config = load_config()
         self.root_dir = config["root_dir"]
+        if not self.root_dir.strip() or not os.path.exists(self.root_dir) or not os.path.isdir(self.root_dir):
+            self.root_dir = os.getcwd()
         self.hidden_list = config["hidden"]
         self.max_name_length = config["max_name_length"]
 
@@ -48,8 +71,13 @@ class FileBrowser:
             self.current_dir =  prev_path
         else:
             self.current_dir =  path
-        self.build_breadcrumbs(path)
+        try:
+            self.getDirList()
+        except PermissionError:
+            self.errors.append(f"Permission Denied")
+            self.current_dir =  prev_path
         self.getDirList()
+        self.build_breadcrumbs(self.current_dir)
 
 
     def build_breadcrumbs(self, path):
@@ -70,25 +98,6 @@ class FileBrowser:
 
 
     def getDirList(self):
-        tp_dict = {
-            'image': 'photo-icon.png', 
-            'audio': 'audio-icon.png',
-            'video': 'video-icon.png',
-            "pdf":"pdf_icon.png", 
-            "py":"python_icon.png", 
-            "zip":"zip_icon.png", 
-            "rar":"rar_icon.png", 
-            "pyt":"nn_model.png", 
-            "net":"nn_model.png", 
-            "xml":"xml_icon.jpg",
-            "csv":"csv_icon.png",
-            "xls":"excel_icon.jpg",
-            "xlsx":"excel_icon.jpg",
-            "doc":"word_icon.png",
-            "docx":"word_icon.png",
-            "json":"json_icon.png"
-            }
-
         directories = natsorted([dir for dir in os.listdir(build_path([self.root_dir, self.current_dir])) if os.path.isdir(build_path([self.root_dir, self.current_dir, dir]))])
         files = natsorted([file for file in os.listdir(build_path([self.root_dir, self.current_dir])) if os.path.isfile(build_path([self.root_dir, self.current_dir, file]))])
 
@@ -113,23 +122,7 @@ class FileBrowser:
 
         for file in files:
             if not self.is_hidden(build_path([self.root_dir, self.current_dir, file])):
-                image = None
-                try:
-                    kind = filetype.guess(file)
-                    print(kind)
-                    if kind:
-                        tp = kind.mime.split('/')[0]
-                        if tp in tp_dict:
-                            image = tp_dict[tp]
-                except:
-                    pass
-
-                if not image:
-                    image = 'default_file.png'
-
-                if file.split(".")[1].lower() in tp_dict:
-                    image = tp_dict[file.split(".")[1].lower()]
-
+                image = get_file_image(file)
                 if len(file) > self.max_name_length:
                     dots = "..."
                 else:
