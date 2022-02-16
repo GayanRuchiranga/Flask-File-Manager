@@ -26,6 +26,17 @@ Dropzone.options.myDropzone = {
     }
 };
 
+$(document).on('click','body',function(e){
+    if (document.getElementById("directory-contextMenu").style.display == "block") {
+        e.preventDefault();
+        hideContextMenues();
+    }
+    if (document.getElementById("file-contextMenu").style.display == "block") {
+        e.preventDefault();
+        hideContextMenues();
+    }
+});
+
 $(function() {
     $('[data-toggle="tooltip"]').tooltip()
 })
@@ -60,35 +71,59 @@ $(function() {
     $('.directory').bind("contextmenu", function(e) {
         e.preventDefault();
         $this = $(this);
-
-        var target_dir = decodeURIComponent($this.find('a')[0].href.split("browser/")[1])
-        if (document.getElementById("contextMenu").style.display == "block") {
-            hideMenu();
+        var target_dir = decodeURIComponent($this.find('a')[0].href.split("/browser/")[1])
+        var directoryContextMenu = document.getElementById("directory-contextMenu");
+        if (directoryContextMenu.style.display == "block") {
+            hideContextMenues();
         } else {
-            var menu = document.getElementById("contextMenu");
-            menu.querySelector('.download a').href = "/download_folder/" + target_dir;
+            directoryContextMenu.querySelector('.download a').href = "/download_folder/" + target_dir;
             $('#fileUploadModal').find('form').attr('action', "/upload_files/" + target_dir)
+            directoryContextMenu.style.display = 'block';
+            directoryContextMenu.style.left = e.pageX + "px";
+            directoryContextMenu.style.top = e.pageY + "px";
+        }
+    });
+
+    $("#directory-contextMenu .download").click(function() {
+        $this = $(this);
+        hideContextMenues();
+    });
+
+    $("#directory-contextMenu .upload").click(function() {
+        $this = $(this);
+        $('#fileUploadModal').modal('show')
+        hideContextMenues();
+    });
+
+
+    $('.file').bind("contextmenu", function(e) {
+        e.preventDefault();
+        $this = $(this);
+
+        var target_dir = decodeURIComponent($this.find('a')[0].href.split("/download_file/")[1])
+        
+        if (document.getElementById("file-contextMenu").style.display == "block") {
+            hideContextMenues();
+        } else {
+            var menu = document.getElementById("file-contextMenu");
+            menu.querySelector('.download a').href = "/download_file/" + target_dir;
             menu.style.display = 'block';
             menu.style.left = e.pageX + "px";
             menu.style.top = e.pageY + "px";
         }
     });
 
-    $("#contextMenu .download").click(function() {
+    $("#file-contextMenu .download").click(function() {
         $this = $(this);
-        var target_dir = $this.href = "#"
-        hideMenu();
-    });
-
-    $("#contextMenu .upload").click(function() {
-        $this = $(this);
-        $('#fileUploadModal').modal('show')
-        hideMenu();
+        hideContextMenues();
     });
 
 });
 
-function hideMenu() {
-    var menu = document.getElementById("contextMenu");
-    menu.style.display = "none";
+function hideContextMenues() {
+    var directoryContextMenu = document.getElementById("directory-contextMenu");
+    directoryContextMenu.style.display = "none";
+
+    var fileContextMenu = document.getElementById("file-contextMenu");
+    fileContextMenu.style.display = "none";
 };

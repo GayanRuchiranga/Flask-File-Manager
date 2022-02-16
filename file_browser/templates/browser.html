@@ -31,7 +31,7 @@
 
    <div class = "row">
       {% for k, file in files_info.items() %}
-         <div class="col-md-2 col-sm-4 col-6 mt-2 hvr-effect">
+         <div class="col-md-2 col-sm-4 col-6 mt-2 file hvr-effect">
             <div class="thumbnail">
                <a href="/download_file/{{file.relative_path}}">
                   <img src = '/static/images/{{file.image}}' class='img-thumbnail' style="border:0px;" data-toggle="tooltip" data-placement="right" title="{{file.size}}"/>
@@ -114,7 +114,7 @@
                   <a href="#" class="dropdown-item link"><i class="fa fa-link" aria-hidden="true"></i> Copy Link Address</a>
                   <a href="#" class="dropdown-item copy"><i class="fa fa-copy" aria-hidden="true"></i> Copy to</a>
                   <a href="#" class="dropdown-item upload"><i class="fa fa-upload" aria-hidden="true"></i> Upload Files</a>
-                  <a href="/download_file/{{file.relative_path}}" class="dropdown-item download"><i class="fa fa-download" aria-hidden="true"></i> Download as a ZIP</a>
+                  <a href="/download_file/{{file.relative_path}}" class="dropdown-item download"><i class="fa fa-download" aria-hidden="true"></i> Download File</a>
                   <a href="#" class="dropdown-item trash"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
                </div>
              </div>
@@ -125,8 +125,8 @@
 </div>
 
 
-<!-- Right Click Menu -->
-<div id="contextMenu" class="context-menu" style="display: none"> 
+<!-- Right Click Menus -->
+<div id="directory-contextMenu" class="context-menu" style="display: none"> 
    <ul class="menu"> 
        <li class="share"><a href="#"><i class="fa fa-share" aria-hidden="true"></i> Share</a></li> 
        <li class="rename"><a href="#"><i class="fa fa-pencil" aria-hidden="true"></i> Rename</a></li> 
@@ -134,6 +134,17 @@
        <li class="copy"><a href="#"><i class="fa fa-copy" aria-hidden="true"></i> Copy to</a></li> 
        <li class="upload"><a href="#"><i class="fa fa-upload" aria-hidden="true"></i> Upload Files</a></li> 
        <li class="download"><a href="#"><i class="fa fa-download" aria-hidden="true"></i> Download as a ZIP</a></li> 
+       <li class="trash"><a href="#"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a></li> 
+   </ul> 
+</div> 
+
+<div id="file-contextMenu" class="context-menu" style="display: none"> 
+   <ul class="menu"> 
+       <li class="share"><a href="#"><i class="fa fa-share" aria-hidden="true"></i> Share</a></li> 
+       <li class="rename"><a href="#"><i class="fa fa-pencil" aria-hidden="true"></i> Rename</a></li> 
+       <li class="link"><a href="#"><i class="fa fa-link" aria-hidden="true"></i> Copy Link Address</a></li> 
+       <li class="copy"><a href="#"><i class="fa fa-copy" aria-hidden="true"></i> Copy to</a></li> 
+       <li class="download"><a href="#"><i class="fa fa-download" aria-hidden="true"></i> Download File</a></li> 
        <li class="trash"><a href="#"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a></li> 
    </ul> 
 </div> 
