@@ -50,8 +50,13 @@ class FileBrowser:
             self.current_dir =  prev_path
         else:
             self.current_dir =  path
-        self.build_breadcrumbs(path)
+        try:
+            self.getDirList()
+        except PermissionError:
+            self.errors.append(f"Permission Denied")
+            self.current_dir =  prev_path
         self.getDirList()
+        self.build_breadcrumbs(self.current_dir)
 
 
     def build_breadcrumbs(self, path):
