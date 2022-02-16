@@ -108,7 +108,9 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
    ```sh
    set FLASK_DEBUG=1
    ```
-4. Run Flask
+4. Open `config.json` and add root directory path and file or directory paths that you want to hide
+
+5. Run Flask
    ```sh
    flask run
    ```
