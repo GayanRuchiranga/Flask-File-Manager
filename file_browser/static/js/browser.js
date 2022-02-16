@@ -61,7 +61,7 @@ $(function() {
         e.preventDefault();
         $this = $(this);
 
-        var target_dir = decodeURIComponent($this.find('a')[0].href.split("browser/")[1])
+        var target_dir = decodeURIComponent($this.find('a')[0].href.split("/browser/")[1])
         if (document.getElementById("contextMenu").style.display == "block") {
             hideMenu();
         } else {

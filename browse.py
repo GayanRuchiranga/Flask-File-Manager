@@ -31,7 +31,10 @@ def get_file_image(file):
         "xlsx":"excel_icon.jpg",
         "doc":"word_icon.png",
         "docx":"word_icon.png",
-        "json":"json_icon.png"
+        "json":"json_icon.png",
+        "html":"html_icon.png",
+        "css":"css_icon.png",
+        "js":"javascript_icon.png"
     }
     mime_type = Path(file).suffix.lower().replace(".","")
     image = 'default_file.png'

@@ -5,7 +5,7 @@ from browse import FileBrowser, build_path
 import os
 from io import BytesIO
 import zipfile
-import time
+from pathlib import Path
 
 main = Blueprint('main', __name__)
 
@@ -77,9 +77,11 @@ def download_directory(directory):
 
     memory_file = BytesIO()
     with zipfile.ZipFile(memory_file, 'w', zipfile.ZIP_DEFLATED) as zipf:
-        for root, dirs, files in os.walk(build_path([file_browser.root_dir,directory])):
+        directory_path = Path(build_path([file_browser.root_dir,directory]))
+        for root, dirs, files in os.walk(str(directory_path)):
             for file in files:
-                zipf.write(os.path.join(root, file), file)
+                file_path = build_path([root, file])
+                zipf.write(file_path, str(Path(file_path).relative_to(directory_path)))
     memory_file.seek(0)
     return send_file(memory_file, attachment_filename=f'{directory.split("/")[-1]}.zip', as_attachment=True)
 
