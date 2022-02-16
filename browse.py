@@ -59,8 +59,9 @@ class FileBrowser:
         self.files_info = {}
 
     def is_hidden(self, path):
-        for i in self.hidden_list:
-            if i != '' and str(Path(i)) == str(Path(path)):
+        print(path)
+        for hidden_path in self.hidden_list:
+            if hidden_path.strip() != '' and build_path([self.root_dir, hidden_path]) in path:
                 return True
         return False
 
