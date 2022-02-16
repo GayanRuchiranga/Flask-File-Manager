@@ -23,6 +23,8 @@ class FileBrowser:
         # Config Data
         config = load_config()
         self.root_dir = config["root_dir"]
+        if not self.root_dir.strip() or not os.path.exists(self.root_dir) or not os.path.isdir(self.root_dir):
+            self.root_dir = os.getcwd()
         self.hidden_list = config["hidden"]
         self.max_name_length = config["max_name_length"]
 
