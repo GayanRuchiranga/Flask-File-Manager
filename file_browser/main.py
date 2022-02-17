@@ -33,15 +33,18 @@ def changeView():
 @login_required
 def browser(relative_path=""):
     file_browser = FileBrowser()
+    file_browser.messages.extend(session.get('messages',[]))
     file_browser.changeDirectory(relative_path, session.get("prev_path",""))
+    session['messages'] = ""
     session["prev_path"] = file_browser.current_dir
-
+    
     return render_template('browser.html',
-    errors = file_browser.errors,
+    messages = file_browser.messages,
     breadcrumbs = file_browser.breadcrumbs,
     dirs_info = file_browser.directories_info,
     files_info = file_browser.files_info,
-    default_view = int(session.get("default_view", 0)))
+    default_view = int(session.get("default_view", 0)),
+    current_directory = file_browser.current_dir)
 
 
 @main.route('/download_file/<path:file>')
@@ -109,4 +112,28 @@ def upload_files(upload_dir=""):
         uploaded_file.save(file_path)
 
     return redirect("/browser/"+upload_dir)
+
+@main.route('/create_dir/', methods=['POST'])
+@main.route('/create_dir/<path:new_dir_parent>', methods=['POST'])
+@login_required
+def create_dir(new_dir_parent=""):
+    file_browser = FileBrowser()
+    full_path = build_path([file_browser.root_dir, new_dir_parent])
+    if not os.path.exists(full_path):
+        return render_template('404.html', errorText='Invalid Directory')
     
+    if not os.path.isdir(full_path):
+        return render_template('404.html', errorText='Not a Directory')
+
+    if file_browser.is_hidden(full_path):
+        return render_template('404.html', errorText='Hidden Directory, Permission Denied')
+    
+    new_dir_name = request.form['folder-name']
+
+    if not new_dir_name.strip():
+        return render_template('404.html', errorText='Directory name cannot be empty!!!')
+    
+    file_browser.create_new_directory(build_path([new_dir_parent, new_dir_name]))
+
+    session['messages'] = file_browser.messages
+    return redirect("/browser/"+new_dir_parent)
