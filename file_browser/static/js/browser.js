@@ -118,6 +118,9 @@ $(function() {
         hideContextMenues();
     });
 
+    $('#newFolderModal').on('shown.bs.modal', function () {
+        $('#folder-name').focus();
+    }) 
 });
 
 function hideContextMenues() {

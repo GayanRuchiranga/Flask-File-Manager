@@ -54,12 +54,11 @@ class FileBrowser:
 
         self.current_dir = ""
         self.breadcrumbs = []
-        self.errors = []
+        self.messages = []
         self.directories_info = {}
         self.files_info = {}
 
     def is_hidden(self, path):
-        print(path)
         for hidden_path in self.hidden_list:
             if hidden_path.strip() != '' and build_path([self.root_dir, hidden_path]) in path:
                 return True
@@ -68,17 +67,17 @@ class FileBrowser:
     def changeDirectory(self, path, prev_path):
         # os.system('cls')
         if not os.path.exists(build_path([self.root_dir, path])):
-            self.errors.append(f"Invalid Directory Path")
+            self.messages.append({"type":"error","message":"Invalid Directory Path"})
             self.current_dir =  prev_path
         elif self.is_hidden(build_path([self.root_dir, path])):
-            self.errors.append(f"Permission Denied")
+            self.messages.append({"type":"error","message":"Hidden Directory, Permission Denied"})
             self.current_dir =  prev_path
         else:
             self.current_dir =  path
         try:
             self.getDirList()
         except PermissionError:
-            self.errors.append(f"Permission Denied")
+            self.messages.append({"type":"error","message":"Permission Denied"})
             self.current_dir =  prev_path
         self.getDirList()
         self.build_breadcrumbs(self.current_dir)
@@ -100,6 +99,14 @@ class FileBrowser:
                     "path_link":f"/browser/{'/'.join(path_parts[:index+1])}"
                 })
 
+    def create_new_directory(self, directory_path):
+        try:
+            os.mkdir(build_path([self.root_dir, directory_path]))
+            self.messages.append({"type":"success","message":"Folder Created"})
+        except FileExistsError:
+            self.messages.append({"type":"error","message":"Folder Exists"})
+        except OSError:
+            self.messages.append({"type":"error","message":"Invalid Folder Name"})
 
     def getDirList(self):
         directories = natsorted([dir for dir in os.listdir(build_path([self.root_dir, self.current_dir])) if os.path.isdir(build_path([self.root_dir, self.current_dir, dir]))])
