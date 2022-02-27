@@ -25,7 +25,7 @@
 
       {% for k, directory in dirs_info.items() %}
       
-      <div class="col-md-2 col-sm-4 col-6 mt-2 directory hvr-effect">
+      <div class="col-md-2 col-sm-4 col-6 mt-2 directory hvr-effect{{' copy-fd' if copy_cut and copy_cut['action'] == 'copy' and copy_cut['path'] == directory.relative_path.replace('\\','/') else ''}}{{' cut-fd' if copy_cut and copy_cut['action'] == 'cut' and copy_cut['path'] == directory.relative_path.replace('\\','/') else ''}}">
          <div class="thumbnail">
             <a href="/browser/{{directory.relative_path}}">
                <img src = '/static/images/{{directory.image}}' class='img-thumbnail' style="border:0px;"/>
@@ -44,7 +44,7 @@
 
    <div class = "row">
       {% for k, file in files_info.items() %}
-         <div class="col-md-2 col-sm-4 col-6 mt-2 file hvr-effect">
+         <div class="col-md-2 col-sm-4 col-6 mt-2 file hvr-effect{{' copy-fd' if copy_cut and copy_cut['action'] == 'copy' and copy_cut['path'] == file.relative_path.replace('\\','/') else ''}}{{' cut-fd' if copy_cut and copy_cut['action'] == 'cut' and copy_cut['path'] == file.relative_path.replace('\\','/') else ''}}">
             <div class="thumbnail">
                <a href="/download_file/{{file.relative_path}}">
                   <img src = '/static/images/{{file.image}}' class='img-thumbnail' style="border:0px;" data-toggle="tooltip" data-placement="right" title="{{file.size}}"/>

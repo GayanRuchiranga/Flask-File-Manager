@@ -1,6 +1,11 @@
 body {
   padding-top: 70px;
 }
+
+img {
+  background: transparent;
+}
+
 .menu {
   list-style: none;
 }
@@ -49,4 +54,8 @@ body {
 .disabled {
   pointer-events:none;
   opacity:0.6;
+}
+
+div.cut-fd > div > a > img{
+  opacity: 0.5;
 }

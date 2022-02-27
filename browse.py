@@ -168,14 +168,6 @@ class FileBrowser:
             self.messages.append({"type":"error","message":"Invalid destination path"})
             return
 
-        if str(Path(full_source_path)) == str(Path(build_path([full_destination_path, Path(full_source_path).name]))):
-            self.messages.append({"type":"error","message":"Unable to perform copy or cut into same directory"})
-            return
-
-        if os.path.exists(str(Path(build_path([full_destination_path, Path(full_source_path).name])))):
-            self.messages.append({"type":"error","message":"File or Directory already exists"})
-            return
-
         destination = ""
         if os.path.isdir(full_destination_path):
             destination = full_destination_path
@@ -184,6 +176,11 @@ class FileBrowser:
         else:
             self.messages.append({"type":"error","message":"Invalid destination path"})
             return
+
+        if str(Path(full_source_path)) == str(Path(os.path.join(destination, Path(full_source_path).name))):
+            self.messages.append({"type":"error","message":"Unable to perform copy or cut into same directory"})
+            return
+
         source_type = ""
         if os.path.isdir(full_source_path):
             source_type = "Folder"
