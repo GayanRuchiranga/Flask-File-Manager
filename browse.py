@@ -160,7 +160,6 @@ class FileBrowser:
         full_source_path = build_path([self.root_dir, src['path']])
         full_destination_path = build_path([self.root_dir, dst])
 
-        print(f"{full_source_path} ==> {full_destination_path}")
         if not os.path.exists(full_source_path):
             self.messages.append({"type":"error","message":"Invalid source path"})
             return
@@ -172,6 +171,11 @@ class FileBrowser:
         if str(Path(full_source_path)) == str(Path(build_path([full_destination_path, Path(full_source_path).name]))):
             self.messages.append({"type":"error","message":"Unable to perform copy or cut into same directory"})
             return
+
+        if os.path.exists(str(Path(build_path([full_destination_path, Path(full_source_path).name])))):
+            self.messages.append({"type":"error","message":"File or Directory already exists"})
+            return
+
         destination = ""
         if os.path.isdir(full_destination_path):
             destination = full_destination_path

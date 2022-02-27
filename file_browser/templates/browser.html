@@ -93,7 +93,7 @@
                   <a href="#" class="dropdown-item link"><i class="fa fa-link" aria-hidden="true"></i> Copy Link Address</a>
                   <a href="#" class="dropdown-item copy"><i class="fa fa-copy" aria-hidden="true"></i> Copy</a>
                   <a href="#" class="dropdown-item cut"><i class="fa fa-cut" aria-hidden="true"></i> Cut</a>
-                  <a href="#" class="dropdown-item paste {{'disabled' if not activate_paste else ''}}"><i class="fa fa-paste" aria-hidden="true"></i> Paste</a>
+                  <a href="#" class="dropdown-item paste {{'disabled' if not copy_cut else ''}}"><i class="fa fa-paste" aria-hidden="true"></i> Paste</a>
                   <a href="#" class="dropdown-item upload"><i class="fa fa-upload" aria-hidden="true"></i> Upload Files</a>
                   <a href="/download_folder/{{directory.relative_path}}" class="dropdown-item download"><i class="fa fa-download" aria-hidden="true"></i> Download as a ZIP</a>
                   <a href="#" class="dropdown-item trash"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
@@ -129,7 +129,7 @@
                   <a href="#" class="dropdown-item link"><i class="fa fa-link" aria-hidden="true"></i> Copy Link Address</a>
                   <a href="#" class="dropdown-item copy"><i class="fa fa-copy" aria-hidden="true"></i> Copy</a>
                   <a href="#" class="dropdown-item cut"><i class="fa fa-cut" aria-hidden="true"></i> Cut</a>
-                  <a href="#" class="dropdown-item paste {{'disabled' if not activate_paste else ''}}"><i class="fa fa-paste" aria-hidden="true"></i> Paste</a>
+                  <a href="#" class="dropdown-item paste {{'disabled' if not copy_cut else ''}}"><i class="fa fa-paste" aria-hidden="true"></i> Paste</a>
                   <a href="#" class="dropdown-item upload"><i class="fa fa-upload" aria-hidden="true"></i> Upload Files</a>
                   <a href="/download_file/{{file.relative_path}}" class="dropdown-item download"><i class="fa fa-download" aria-hidden="true"></i> Download File</a>
                   <a href="#" class="dropdown-item trash"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
@@ -150,7 +150,7 @@
        <li class="link"><a href="#"><i class="fa fa-link" aria-hidden="true"></i> Copy Link Address</a></li> 
        <li class="copy"><a href="#"><i class="fa fa-copy" aria-hidden="true"></i> Copy</a></li> 
        <li class="cut"><a href="#"><i class="fa fa-cut" aria-hidden="true"></i> Cut</a></li> 
-       <li class="paste {{'disabled' if not activate_paste else ''}}"><a href="#"><i class="fa fa-paste" aria-hidden="true"></i> Paste</a></li> 
+       <li class="paste {{'disabled' if not copy_cut else ''}}"><a href="#"><i class="fa fa-paste" aria-hidden="true"></i> Paste</a></li> 
        <li class="upload"><a href="#"><i class="fa fa-upload" aria-hidden="true"></i> Upload Files</a></li> 
        <li class="download"><a href="#"><i class="fa fa-download" aria-hidden="true"></i> Download as a ZIP</a></li> 
        <li class="trash"><a href="#"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a></li> 
@@ -164,7 +164,7 @@
        <li class="link"><a href="#"><i class="fa fa-link" aria-hidden="true"></i> Copy Link Address</a></li> 
        <li class="copy"><a href="#"><i class="fa fa-copy" aria-hidden="true"></i> Copy</a></li>
        <li class="cut"><a href="#"><i class="fa fa-cut" aria-hidden="true"></i> Cut</a></li>
-       <li class="paste {{'disabled' if not activate_paste else ''}}"><a href="#"><i class="fa fa-paste" aria-hidden="true"></i> Paste</a></li> 
+       <li class="paste {{'disabled' if not copy_cut else ''}}"><a href="#"><i class="fa fa-paste" aria-hidden="true"></i> Paste</a></li> 
        <li class="download"><a href="#"><i class="fa fa-download" aria-hidden="true"></i> Download File</a></li> 
        <li class="trash"><a href="#"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a></li> 
    </ul> 

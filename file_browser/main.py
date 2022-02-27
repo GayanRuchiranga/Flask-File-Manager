@@ -44,7 +44,7 @@ def browser(relative_path=""):
     dirs_info = file_browser.directories_info,
     files_info = file_browser.files_info,
     default_view = int(session.get("default_view", 0)),
-    activate_paste = True if session.get('copy_cut',{}) else False,
+    copy_cut = session.get('copy_cut',{}),
     current_directory = file_browser.current_dir)
 
 
