@@ -1,6 +1,11 @@
 body {
   padding-top: 70px;
 }
+
+img {
+  background: transparent;
+}
+
 .menu {
   list-style: none;
 }
@@ -44,4 +49,13 @@ body {
 }
 .hvr-effect:hover{
   box-shadow:0 8px 10px 0px rgba(0,0,0,0.125);
+}
+
+.disabled {
+  pointer-events:none;
+  opacity:0.6;
+}
+
+div.cut-fd > div > a > img{
+  opacity: 0.5;
 }

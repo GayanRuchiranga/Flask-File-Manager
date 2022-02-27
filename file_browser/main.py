@@ -34,16 +34,17 @@ def changeView():
 def browser(relative_path=""):
     file_browser = FileBrowser()
     file_browser.messages.extend(session.get('messages',[]))
-    file_browser.changeDirectory(relative_path, session.get("prev_path",""))
-    session['messages'] = ""
+    file_browser.change_directory(relative_path, session.get("prev_path",""))
+    session.pop('messages', None)
     session["prev_path"] = file_browser.current_dir
-    
+
     return render_template('browser.html',
     messages = file_browser.messages,
     breadcrumbs = file_browser.breadcrumbs,
     dirs_info = file_browser.directories_info,
     files_info = file_browser.files_info,
     default_view = int(session.get("default_view", 0)),
+    copy_cut = session.get('copy_cut',{}),
     current_directory = file_browser.current_dir)
 
 
@@ -137,3 +138,47 @@ def create_dir(new_dir_parent=""):
 
     session['messages'] = file_browser.messages
     return redirect("/browser/"+new_dir_parent)
+
+# @main.route('/copy_cut/', methods=['POST'])
+@main.route('/copy_cut/<path:action>/<path:content_path>', methods=['GET'])
+@login_required
+def copy_cut(action="", content_path=""):
+    if action not in ["copy", "cut"]:
+         return render_template('404.html', errorText='Invalid Action')
+    
+    parent_dir =  Path(content_path).parent
+    file_browser = FileBrowser()
+    parent_full_path = build_path([file_browser.root_dir, str(parent_dir)])
+
+    if not os.path.exists(parent_full_path):
+        return render_template('404.html', errorText='Invalid file/directory path')
+
+    if file_browser.is_hidden(parent_full_path):
+        return render_template('404.html', errorText='Hidden Directory, Permission Denied')
+    
+    # print(f"{action} => {content_path}")
+    session['copy_cut'] = {"action": action, "path": content_path}
+    return redirect("/browser/"+str(parent_dir))
+
+@main.route('/paste/<path:content_path>', methods=['GET'])
+@login_required
+def paste( content_path=""):
+    parent_dir =  Path(content_path).parent
+    file_browser = FileBrowser()
+    parent_full_path = build_path([file_browser.root_dir, str(parent_dir)])
+
+    if not os.path.exists(parent_full_path):
+        return render_template('404.html', errorText='Invalid file/directory path')
+
+    if file_browser.is_hidden(parent_full_path):
+        return render_template('404.html', errorText='Hidden Directory, Permission Denied')
+    
+    source = session.get('copy_cut', {})
+    if not source:
+        return render_template('404.html', errorText='Unable to find source file or directory')
+
+    file_browser.perform_copy_cut(source, content_path)
+
+    session['messages'] = file_browser.messages
+    session.pop('copy_cut', None)
+    return redirect("/browser/"+str(parent_dir))

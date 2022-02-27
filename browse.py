@@ -1,4 +1,5 @@
 import json
+import shutil
 import traceback
 import os
 from pathlib import Path
@@ -64,7 +65,7 @@ class FileBrowser:
                 return True
         return False
 
-    def changeDirectory(self, path, prev_path):
+    def change_directory(self, path, prev_path):
         # os.system('cls')
         if not os.path.exists(build_path([self.root_dir, path])):
             self.messages.append({"type":"error","message":"Invalid Directory Path"})
@@ -75,11 +76,11 @@ class FileBrowser:
         else:
             self.current_dir =  path
         try:
-            self.getDirList()
+            self.get_dir_list()
         except PermissionError:
             self.messages.append({"type":"error","message":"Permission Denied"})
             self.current_dir =  prev_path
-        self.getDirList()
+        self.get_dir_list()
         self.build_breadcrumbs(self.current_dir)
 
 
@@ -108,7 +109,7 @@ class FileBrowser:
         except OSError:
             self.messages.append({"type":"error","message":"Invalid Folder Name"})
 
-    def getDirList(self):
+    def get_dir_list(self):
         directories = natsorted([dir for dir in os.listdir(build_path([self.root_dir, self.current_dir])) if os.path.isdir(build_path([self.root_dir, self.current_dir, dir]))])
         files = natsorted([file for file in os.listdir(build_path([self.root_dir, self.current_dir])) if os.path.isfile(build_path([self.root_dir, self.current_dir, file]))])
 
@@ -154,4 +155,48 @@ class FileBrowser:
                     self.files_info[file]['date_created'] = "---"
                     self.files_info[file]['date_modified'] = "---"
                     self.files_info[file]['size'] = "---"
+
+    def perform_copy_cut(self, src, dst):
+        full_source_path = build_path([self.root_dir, src['path']])
+        full_destination_path = build_path([self.root_dir, dst])
+
+        if not os.path.exists(full_source_path):
+            self.messages.append({"type":"error","message":"Invalid source path"})
+            return
+        
+        if not os.path.exists(full_destination_path):
+            self.messages.append({"type":"error","message":"Invalid destination path"})
+            return
+
+        destination = ""
+        if os.path.isdir(full_destination_path):
+            destination = full_destination_path
+        elif os.path.isfile(full_destination_path):
+            destination = Path(full_destination_path).parent
+        else:
+            self.messages.append({"type":"error","message":"Invalid destination path"})
+            return
+
+        if str(Path(full_source_path)) == str(Path(os.path.join(destination, Path(full_source_path).name))):
+            self.messages.append({"type":"error","message":"Unable to perform copy or cut into same directory"})
+            return
+
+        source_type = ""
+        if os.path.isdir(full_source_path):
+            source_type = "Folder"
+            if src["action"] == "copy":
+                shutil.copytree(full_source_path, os.path.join(destination, Path(full_source_path).name))
+                self.messages.append({"type":"success","message":"Folder copied"})
+        elif os.path.isfile(full_source_path):
+            source_type = "File"
+            if src["action"] == "copy":
+                shutil.copyfile(full_source_path, os.path.join(destination, Path(full_source_path).name))
+                self.messages.append({"type":"success","message":"File copied"})
+
+        if src["action"] == "cut":
+            shutil.move(full_source_path, os.path.join(destination, Path(full_source_path).name))
+            self.messages.append({"type":"success","message":f"{source_type} moved"})
+        elif src["action"] != "copy":
+            self.messages.append({"type":"error","message":"Invalid action"})
+            return
         
