@@ -96,7 +96,7 @@ class FileBrowser:
             self.breadcrumbs.append(
                 {
                     "breadcrumb":breadcrumb,
-                    "is_active":True if breadcrumb == path_parts[-1] else False,
+                    "is_active":True if '/'.join(path_parts[:index+1]) == path else False,
                     "path_link":f"/browser/{'/'.join(path_parts[:index+1])}"
                 })
 
